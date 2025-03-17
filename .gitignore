@@ -53,4 +53,4 @@ Temporary Items
 *.pio
 
 # Environments
-.notebookenv
+.venv
