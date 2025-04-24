@@ -1,0 +1,720 @@
+[
+    {
+        "id": "de3129ac414d4a1d",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": true,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "c156b9af3fe917cd",
+        "type": "mqtt out",
+        "z": "de3129ac414d4a1d",
+        "name": "Publish To Broker",
+        "topic": "challenge3/id_generator",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d7d5817a8683a565",
+        "x": 570,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "6754d100ac3bbf15",
+        "type": "inject",
+        "z": "de3129ac414d4a1d",
+        "name": "Inject Timestamp",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 420,
+        "wires": [
+            [
+                "e36a3b9d55d4b886"
+            ]
+        ]
+    },
+    {
+        "id": "e36a3b9d55d4b886",
+        "type": "function",
+        "z": "de3129ac414d4a1d",
+        "name": "Payload Generator",
+        "func": "// Generate random id between 0 and 30000\nvar randomNumber = Math.floor(Math.random() * 30001);\n\n// Prepare payload\nmsg.payload = {\n    id: randomNumber,\n    timestamp: msg.payload,\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 420,
+        "wires": [
+            [
+                "c156b9af3fe917cd",
+                "08c9be06079f677d"
+            ]
+        ]
+    },
+    {
+        "id": "08c9be06079f677d",
+        "type": "function",
+        "z": "de3129ac414d4a1d",
+        "name": "Add Row Count",
+        "func": "// Increment row counter\nvar rowCount = context.get(\"rowCount\");\nrowCount++;\ncontext.set(\"rowCount\", rowCount);\n\n// Add row counter to payload\nmsg.payload = {\n    \"No.\": rowCount,\n    \"ID\": msg.payload.id,\n    \"TIMESTAMP\": msg.payload.timestamp,\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "// Initialize row counter\ncontext.set(\"rowCount\", 0)",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 380,
+        "wires": [
+            [
+                "d8bfa523fec2a874"
+            ]
+        ]
+    },
+    {
+        "id": "d8bfa523fec2a874",
+        "type": "csv",
+        "z": "de3129ac414d4a1d",
+        "name": "Convert To CSV",
+        "spec": "rfc",
+        "sep": ",",
+        "hdrin": true,
+        "hdrout": "once",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "No.,ID,TIMESTAMP",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 760,
+        "y": 380,
+        "wires": [
+            [
+                "9def05275de87035"
+            ]
+        ]
+    },
+    {
+        "id": "9def05275de87035",
+        "type": "file",
+        "z": "de3129ac414d4a1d",
+        "name": "Write To id_log",
+        "filename": "ThirdChallenge/node_red/id_log.csv",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 960,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fbe846b910a31e22",
+        "type": "mqtt in",
+        "z": "de3129ac414d4a1d",
+        "name": "Receive Generated Ids",
+        "topic": "challenge3/id_generator",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "d7d5817a8683a565",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 820,
+        "wires": [
+            [
+                "ac5db99b3234f8ba"
+            ]
+        ]
+    },
+    {
+        "id": "a81cbe7a269cef1f",
+        "type": "file",
+        "z": "de3129ac414d4a1d",
+        "name": "ack_log",
+        "filename": "ThirdChallenge/node_red/ack_log.csv",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 320,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "46cad1fd77a4e727",
+        "type": "inject",
+        "z": "de3129ac414d4a1d",
+        "name": "Prepare Files",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 110,
+        "y": 60,
+        "wires": [
+            [
+                "6e81a607f662fd3f",
+                "135ad58fb0d1608c",
+                "29e90658951bdf5c",
+                "a81cbe7a269cef1f"
+            ]
+        ]
+    },
+    {
+        "id": "135ad58fb0d1608c",
+        "type": "file",
+        "z": "de3129ac414d4a1d",
+        "name": "id_log",
+        "filename": "ThirdChallenge/node_red/id_log.csv",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 310,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "29e90658951bdf5c",
+        "type": "file",
+        "z": "de3129ac414d4a1d",
+        "name": "filtered_pubs",
+        "filename": "ThirdChallenge/node_red/filtered_pubs.csv",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 330,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6e81a607f662fd3f",
+        "type": "file in",
+        "z": "de3129ac414d4a1d",
+        "name": "challenge",
+        "filename": "ThirdChallenge/challenge.csv",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 320,
+        "y": 60,
+        "wires": [
+            [
+                "4817511387250d43"
+            ]
+        ]
+    },
+    {
+        "id": "4817511387250d43",
+        "type": "csv",
+        "z": "de3129ac414d4a1d",
+        "name": "Convert To Javascript Object",
+        "spec": "rfc",
+        "sep": ",",
+        "hdrin": true,
+        "hdrout": "once",
+        "multi": "mult",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 540,
+        "y": 60,
+        "wires": [
+            [
+                "6991be97605de9d3"
+            ]
+        ]
+    },
+    {
+        "id": "6991be97605de9d3",
+        "type": "function",
+        "z": "de3129ac414d4a1d",
+        "name": "Save Object Into Flow Variable",
+        "func": "// Save csv content into flow variable for later use\nflow.set(\"csv\", msg.payload);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ac5db99b3234f8ba",
+        "type": "function",
+        "z": "de3129ac414d4a1d",
+        "name": "Identify Packet",
+        "func": "// Clean useless data from msg\nmsg = {\n    id: msg.payload.id,\n}\n\n// Increment message counter\nvar messageCount = context.get(\"messageCount\");\nmessageCount++;\ncontext.set(\"messageCount\", messageCount);\n\n// If we reached 80 messages stop processing\nif (messageCount > 80) {\n    return msg;\n}\n\n// Calculate remainder\n// If 0 get the 7711 because packets starts from 1\nvar N = msg.id % 7711;\nif (N == 0) {\n    N = 7711;\n}\n\n// Get packet from csv file\nvar csv = flow.get(\"csv\");\nvar packet = csv[N-1];\n\n// Defined to use in the switch\n// Only interested in publish and ack\nmsg.type = \"\";\n\n// Check if it's publish message\nif (packet.Info.includes(\"Publish Message\")) {\n    msg.type = \"PUBLISH\";\n    msg.info = packet.Info;\n    msg.data = packet.Payload;\n    return msg;\n}\n\n// Check if it's an ACK message\nif (packet.Info.includes(\"Ack\")) {\n    msg.type = \"ACK\";\n    msg.info = packet.Info;\n    return msg;\n}\n\n// Other types we just don't care\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "// Initialize message counter\ncontext.set(\"messageCount\", 0)",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 820,
+        "wires": [
+            [
+                "2324885d627b7760"
+            ]
+        ]
+    },
+    {
+        "id": "d6728115527e0b6e",
+        "type": "function",
+        "z": "de3129ac414d4a1d",
+        "name": "Handle ACKs",
+        "func": "// Increment ack counter\nvar ackCount = context.get(\"ackCount\");\nackCount++;\ncontext.set(\"ackCount\", ackCount);\n\n// Truncate info after ack\nvar index = msg.info.indexOf(\"Ack\");\nmsg.info = msg.info.slice(0, index + \"Ack\".length);\n\n// Prepare payload for csv file\nmsg.payload = {\n    \"No.\": ackCount,\n    \"TIMESTAMP\": Date.now(),\n    \"SUB_ID\": msg.id,\n    \"MSG_TYPE\": msg.info,\n};\n\n// Clean useless data from msg\nmsg = {\n    ackCount: ackCount,\n    payload: msg.payload,\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "// Initialize ack counter\ncontext.set(\"ackCount\", 0)",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 860,
+        "wires": [
+            [
+                "a6e1752337244d14"
+            ]
+        ]
+    },
+    {
+        "id": "78c2e371ddadfeca",
+        "type": "file",
+        "z": "de3129ac414d4a1d",
+        "name": "Write to ack_log",
+        "filename": "ThirdChallenge/node_red/ack_log.csv",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1100,
+        "y": 860,
+        "wires": [
+            [
+                "0bf7a9d93b040104"
+            ]
+        ]
+    },
+    {
+        "id": "0bf7a9d93b040104",
+        "type": "function",
+        "z": "de3129ac414d4a1d",
+        "name": "Prepare ThingSpeak Request",
+        "func": "// ThingSpeak channel write API key\nvar apiKey = \"EKV8H4YXLCW82HQ7\";\n\n// Preapare request url\nvar url = \"https://api.thingspeak.com/update?api_key=\"+apiKey+\"&field1=\"+msg.ackCount;\n\n// Clean useless data from msg\nmsg = {\n    url: url,\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1340,
+        "y": 860,
+        "wires": [
+            [
+                "a323f47de08ac74e"
+            ]
+        ]
+    },
+    {
+        "id": "496a8687bccbe8d2",
+        "type": "http request",
+        "z": "de3129ac414d4a1d",
+        "name": "ThingSpeak Request",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1920,
+        "y": 860,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a6e1752337244d14",
+        "type": "csv",
+        "z": "de3129ac414d4a1d",
+        "name": "Convert To CSV",
+        "spec": "rfc",
+        "sep": ",",
+        "hdrin": true,
+        "hdrout": "once",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "No.,TIMESTAMP,SUB_ID,MSG_TYPE",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 900,
+        "y": 860,
+        "wires": [
+            [
+                "78c2e371ddadfeca"
+            ]
+        ]
+    },
+    {
+        "id": "2324885d627b7760",
+        "type": "switch",
+        "z": "de3129ac414d4a1d",
+        "name": "Switch",
+        "property": "type",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "PUBLISH",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "ACK",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 530,
+        "y": 820,
+        "wires": [
+            [
+                "d4195dc0f1f903ab"
+            ],
+            [
+                "d6728115527e0b6e"
+            ]
+        ]
+    },
+    {
+        "id": "a323f47de08ac74e",
+        "type": "delay",
+        "z": "de3129ac414d4a1d",
+        "name": "Free ThingSpeak Account Limiter",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "20",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1640,
+        "y": 860,
+        "wires": [
+            [
+                "496a8687bccbe8d2"
+            ]
+        ]
+    },
+    {
+        "id": "e4f29077da56e479",
+        "type": "mqtt out",
+        "z": "de3129ac414d4a1d",
+        "name": "Publish To Broker",
+        "topic": "",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d7d5817a8683a565",
+        "x": 1210,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "cd0e152f916ceedb",
+        "type": "delay",
+        "z": "de3129ac414d4a1d",
+        "name": "Limit To 4 Messages Per Minute",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "4",
+        "nbRateUnits": "1",
+        "rateUnits": "minute",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 950,
+        "y": 780,
+        "wires": [
+            [
+                "e4f29077da56e479",
+                "58aea0f9ec20e414"
+            ]
+        ]
+    },
+    {
+        "id": "58aea0f9ec20e414",
+        "type": "function",
+        "z": "de3129ac414d4a1d",
+        "name": "Filter Temperature [F] Data",
+        "func": "// Remove useless data\n// Also to have all temperature plotted without difference\ndelete msg.topic;\n\n// Save MQTT payload for later use\nmsg.data = msg.payload.payload;\n\n// Filter temperature [F] messages and compute mean\nif (msg.data && msg.data.type == \"temperature\" && msg.data.unit == \"F\") {\n        msg.payload = (msg.data.range[0] + msg.data.range[1])/2;\n        return msg;\n}\n\n// We don't care about other messages\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1240,
+        "y": 780,
+        "wires": [
+            [
+                "f3cccf414ac04073",
+                "bf28937f3a201b04"
+            ]
+        ]
+    },
+    {
+        "id": "f3cccf414ac04073",
+        "type": "ui_chart",
+        "z": "de3129ac414d4a1d",
+        "name": "Plot Chart",
+        "group": "f2b01e62c4d0dea7",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "Temperature [F]",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": true,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1460,
+        "y": 700,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d4195dc0f1f903ab",
+        "type": "function",
+        "z": "de3129ac414d4a1d",
+        "name": "Handle PUBs",
+        "func": "// Extract topics from info\n// Match for [anything] and then remove square brackets\nvar topics = msg.info.match(/\\[.*?\\]/g).map(x => x.slice(1, -1));\n\n// Extract payloads from data\nvar payloads = [];\ntry {\n  payloads = JSON.parse(`[${msg.data}]`);\n} catch (err) {\n  // Missing payload\n}\n\n// Send multiple messages for packets with multiple topics\nfor (let i = 0; i < topics.length; i++) {\n  var newMsg = {\n    topic: topics[i],\n    payload: {\n      timestamp: Date.now(),\n      id: msg.id,\n      topic: topics[i],\n      payload: payloads[i] || {}\n    }\n  };\n  node.send(newMsg);\n}\n\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 780,
+        "wires": [
+            [
+                "cd0e152f916ceedb"
+            ]
+        ]
+    },
+    {
+        "id": "bf28937f3a201b04",
+        "type": "function",
+        "z": "de3129ac414d4a1d",
+        "name": "Prepare To Write",
+        "func": "// Increment publish counter\nvar pubCount = context.get(\"pubCount\");\npubCount++;\ncontext.set(\"pubCount\", pubCount);\n\n// Prepare payload for csv\nmsg.payload = {\n    \"No.\": pubCount,\n    \"LONG\": msg.data.long,\n    \"LAT\": msg.data.lat,\n    \"MEAN_VALUE\": msg.payload,\n    \"TYPE\": msg.data.type,\n    \"UNIT\": msg.data.unit,\n    \"DESCRIPTION\": msg.data.description\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "// Initialize publish counter\ncontext.set(\"pubCount\", 0);",
+        "finalize": "",
+        "libs": [],
+        "x": 1480,
+        "y": 780,
+        "wires": [
+            [
+                "2111d92777bd6323"
+            ]
+        ]
+    },
+    {
+        "id": "2111d92777bd6323",
+        "type": "csv",
+        "z": "de3129ac414d4a1d",
+        "name": "Convert To CSV",
+        "spec": "rfc",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "once",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "No.,LONG,LAT,MEAN_VALUE,TYPE,UNIT,DESCRIPTION",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 1680,
+        "y": 780,
+        "wires": [
+            [
+                "177caf966921e540"
+            ]
+        ]
+    },
+    {
+        "id": "177caf966921e540",
+        "type": "file",
+        "z": "de3129ac414d4a1d",
+        "name": "Write To filtered_pubs.csv",
+        "filename": "ThirdChallenge/node_red/filtered_pubs.csv",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1910,
+        "y": 780,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d7d5817a8683a565",
+        "type": "mqtt-broker",
+        "name": "Local Broker",
+        "broker": "localhost",
+        "port": "1884",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "f2b01e62c4d0dea7",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "96da587a5b69f3f9",
+        "order": 1,
+        "disp": false,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "96da587a5b69f3f9",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
