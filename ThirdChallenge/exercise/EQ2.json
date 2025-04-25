@@ -1,0 +1,270 @@
+[
+    {
+        "id": "5268f1da625ea1e3",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "853e9584f93105d0",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "name": "Genera dati",
+        "func": "var CHANNEL_ID = 2931213;\nvar field1=Math.random()*10;\nvar field2=Math.random()*10;\nmsg.topic = 'channels/'+CHANNEL_ID+'/publish';\nmsg.payload='field1='+field1+'&field2='+field2+'&status=MQTTPUBLISH';\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 300,
+        "wires": [
+            [
+                "3f7af513f199f060",
+                "405a2d6093064a5f"
+            ]
+        ]
+    },
+    {
+        "id": "3f7af513f199f060",
+        "type": "mqtt out",
+        "z": "5268f1da625ea1e3",
+        "name": "MQTT → ThingSpeak",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "f62d93d45b103b0b",
+        "x": 840,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "7b6d77b814c7bf90",
+        "type": "inject",
+        "z": "5268f1da625ea1e3",
+        "name": "Sensor",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 290,
+        "y": 300,
+        "wires": [
+            [
+                "853e9584f93105d0"
+            ]
+        ]
+    },
+    {
+        "id": "743a1e53ac425edd",
+        "type": "mqtt in",
+        "z": "5268f1da625ea1e3",
+        "name": "",
+        "topic": "channels/2931213/subscribe/fields/+",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "f62d93d45b103b0b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 330,
+        "y": 620,
+        "wires": [
+            [
+                "efaf717892a467db",
+                "0a6128b6a5b7cbf4"
+            ]
+        ]
+    },
+    {
+        "id": "efaf717892a467db",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "name": "Read packet",
+        "func": "let topic = msg.topic;\nlet value = parseFloat(msg.payload);\n\nif (topic.includes(\"field1\")) {\n    flow.set(\"temperature\", value);\n} else if (topic.includes(\"field2\")) {\n    flow.set(\"humidity\", value);\n}\n\nlet temp = flow.get(\"temperature\");\nlet hum = flow.get(\"humidity\");\n\nif (temp !== undefined && hum !== undefined) {\n    msg.payload = {\n        temp: temp,\n        hum: hum\n    };\n    return msg;\n}\n\nreturn null;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 620,
+        "wires": [
+            [
+                "7f608d46bd8f3e88"
+            ]
+        ]
+    },
+    {
+        "id": "7f608d46bd8f3e88",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "name": "hum/temp",
+        "func": "let temp = msg.payload.temp;\nlet hum = msg.payload.hum;\n\nlet ratio = (temp / hum).toFixed(3);\n\nmsg.payload = ratio;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 620,
+        "wires": [
+            [
+                "5b50a268b892fbb0",
+                "73e7598dd4cc5f63"
+            ]
+        ]
+    },
+    {
+        "id": "5b50a268b892fbb0",
+        "type": "ui_gauge",
+        "z": "5268f1da625ea1e3",
+        "name": "",
+        "group": "f2b01e62c4d0dea7",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "gauge",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 10,
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1070,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "405a2d6093064a5f",
+        "type": "debug",
+        "z": "5268f1da625ea1e3",
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 810,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "0a6128b6a5b7cbf4",
+        "type": "debug",
+        "z": "5268f1da625ea1e3",
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "73e7598dd4cc5f63",
+        "type": "debug",
+        "z": "5268f1da625ea1e3",
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1070,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "f62d93d45b103b0b",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "mqtt3.thingspeak.com",
+        "port": 1883,
+        "clientid": "ChMYECwnFyIvFyMVFRUeHhY",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "f2b01e62c4d0dea7",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "96da587a5b69f3f9",
+        "order": 1,
+        "disp": false,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "96da587a5b69f3f9",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
