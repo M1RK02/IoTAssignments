@@ -1,6 +1,17 @@
 No.,LONG,LAT,MEAN_VALUE,TYPE,UNIT,DESCRIPTION
-1,97,84,30,temperature,F,Room Temperature
-2,50,93,28,temperature,F,Room Temperature
-3,76,77,18,temperature,F,Room Temperature
-4,54,59,20,temperature,F,Room Temperature
-5,76,77,18,temperature,F,Room Temperature
+1,45,87,25,temperature,F,Room Temperature
+2,85,85,30.5,temperature,F,Room Temperature
+3,84,48,32,temperature,F,Room Temperature
+4,61,77,26.5,temperature,F,Room Temperature
+5,69,43,29,temperature,F,Room Temperature
+6,52,49,29,temperature,F,Room Temperature
+7,58,73,31.5,temperature,F,Room Temperature
+8,72,53,30,temperature,F,Room Temperature
+9,60,67,15.5,temperature,F,Room Temperature
+10,66,73,18.5,temperature,F,Room Temperature
+11,69,43,29,temperature,F,Room Temperature
+12,63,91,34,temperature,F,Room Temperature
+13,97,84,30,temperature,F,Room Temperature
+14,50,93,28,temperature,F,Room Temperature
+15,60,76,30,temperature,F,Room Temperature
+16,73,55,31.5,temperature,F,Room Temperature
