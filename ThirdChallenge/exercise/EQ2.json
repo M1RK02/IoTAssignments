@@ -8,10 +8,66 @@
         "env": []
     },
     {
+        "id": "86e795f62a60a756",
+        "type": "group",
+        "z": "5268f1da625ea1e3",
+        "name": "Node-RED",
+        "style": {
+            "stroke": "#ff3f3f",
+            "label": true
+        },
+        "nodes": [
+            "743a1e53ac425edd",
+            "efaf717892a467db",
+            "7f608d46bd8f3e88",
+            "5b50a268b892fbb0"
+        ],
+        "x": 414,
+        "y": 479,
+        "w": 972,
+        "h": 82
+    },
+    {
+        "id": "54f34fb1c7e08c8f",
+        "type": "group",
+        "z": "5268f1da625ea1e3",
+        "name": "End node",
+        "style": {
+            "label": true,
+            "stroke": "#ffC000"
+        },
+        "nodes": [
+            "853e9584f93105d0",
+            "1f6f55421f13d672"
+        ],
+        "x": 414,
+        "y": 259,
+        "w": 452,
+        "h": 82
+    },
+    {
+        "id": "da3b2ce77f613957",
+        "type": "group",
+        "z": "5268f1da625ea1e3",
+        "name": "The Things Network",
+        "style": {
+            "label": true,
+            "stroke": "#3f93cf"
+        },
+        "nodes": [
+            "3f7af513f199f060"
+        ],
+        "x": 954,
+        "y": 259,
+        "w": 252,
+        "h": 82
+    },
+    {
         "id": "853e9584f93105d0",
         "type": "function",
         "z": "5268f1da625ea1e3",
-        "name": "Genera dati",
+        "g": "54f34fb1c7e08c8f",
+        "name": "DHT22",
         "func": "var CHANNEL_ID = 2931213;\nvar field1=Math.random()*10;\nvar field2=Math.random()*10;\nmsg.topic = 'channels/'+CHANNEL_ID+'/publish';\nmsg.payload='field1='+field1+'&field2='+field2+'&status=MQTTPUBLISH';\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
@@ -19,12 +75,11 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 530,
+        "x": 500,
         "y": 300,
         "wires": [
             [
-                "3f7af513f199f060",
-                "405a2d6093064a5f"
+                "1f6f55421f13d672"
             ]
         ]
     },
@@ -32,6 +87,7 @@
         "id": "3f7af513f199f060",
         "type": "mqtt out",
         "z": "5268f1da625ea1e3",
+        "g": "da3b2ce77f613957",
         "name": "MQTT → ThingSpeak",
         "topic": "",
         "qos": "",
@@ -42,15 +98,15 @@
         "correl": "",
         "expiry": "",
         "broker": "f62d93d45b103b0b",
-        "x": 840,
-        "y": 360,
+        "x": 1080,
+        "y": 300,
         "wires": []
     },
     {
         "id": "7b6d77b814c7bf90",
         "type": "inject",
         "z": "5268f1da625ea1e3",
-        "name": "Sensor",
+        "name": "New measurement",
         "props": [
             {
                 "p": "payload"
@@ -67,7 +123,7 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 290,
+        "x": 270,
         "y": 300,
         "wires": [
             [
@@ -79,7 +135,8 @@
         "id": "743a1e53ac425edd",
         "type": "mqtt in",
         "z": "5268f1da625ea1e3",
-        "name": "",
+        "g": "86e795f62a60a756",
+        "name": "Subscribe to ThingSpeak channel",
         "topic": "channels/2931213/subscribe/fields/+",
         "qos": "2",
         "datatype": "auto-detect",
@@ -88,12 +145,11 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 330,
-        "y": 620,
+        "x": 580,
+        "y": 520,
         "wires": [
             [
-                "efaf717892a467db",
-                "0a6128b6a5b7cbf4"
+                "efaf717892a467db"
             ]
         ]
     },
@@ -101,6 +157,7 @@
         "id": "efaf717892a467db",
         "type": "function",
         "z": "5268f1da625ea1e3",
+        "g": "86e795f62a60a756",
         "name": "Read packet",
         "func": "let topic = msg.topic;\nlet value = parseFloat(msg.payload);\n\nif (topic.includes(\"field1\")) {\n    flow.set(\"temperature\", value);\n} else if (topic.includes(\"field2\")) {\n    flow.set(\"humidity\", value);\n}\n\nlet temp = flow.get(\"temperature\");\nlet hum = flow.get(\"humidity\");\n\nif (temp !== undefined && hum !== undefined) {\n    msg.payload = {\n        temp: temp,\n        hum: hum\n    };\n    return msg;\n}\n\nreturn null;\n",
         "outputs": 1,
@@ -109,8 +166,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 630,
-        "y": 620,
+        "x": 850,
+        "y": 520,
         "wires": [
             [
                 "7f608d46bd8f3e88"
@@ -121,7 +178,8 @@
         "id": "7f608d46bd8f3e88",
         "type": "function",
         "z": "5268f1da625ea1e3",
-        "name": "hum/temp",
+        "g": "86e795f62a60a756",
+        "name": "temp/hum",
         "func": "let temp = msg.payload.temp;\nlet hum = msg.payload.hum;\n\nlet ratio = (temp / hum).toFixed(3);\n\nmsg.payload = ratio;\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
@@ -129,12 +187,11 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 830,
-        "y": 620,
+        "x": 1050,
+        "y": 520,
         "wires": [
             [
-                "5b50a268b892fbb0",
-                "73e7598dd4cc5f63"
+                "5b50a268b892fbb0"
             ]
         ]
     },
@@ -142,7 +199,8 @@
         "id": "5b50a268b892fbb0",
         "type": "ui_gauge",
         "z": "5268f1da625ea1e3",
-        "name": "",
+        "g": "86e795f62a60a756",
+        "name": "Show temp/hum",
         "group": "f2b01e62c4d0dea7",
         "order": 1,
         "width": 0,
@@ -162,60 +220,30 @@
         "seg2": "",
         "diff": false,
         "className": "",
-        "x": 1070,
-        "y": 620,
+        "x": 1270,
+        "y": 520,
         "wires": []
     },
     {
-        "id": "405a2d6093064a5f",
-        "type": "debug",
+        "id": "1f6f55421f13d672",
+        "type": "function",
         "z": "5268f1da625ea1e3",
-        "name": "msg.payload",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 810,
-        "y": 240,
-        "wires": []
-    },
-    {
-        "id": "0a6128b6a5b7cbf4",
-        "type": "debug",
-        "z": "5268f1da625ea1e3",
-        "name": "msg.payload",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 650,
-        "y": 500,
-        "wires": []
-    },
-    {
-        "id": "73e7598dd4cc5f63",
-        "type": "debug",
-        "z": "5268f1da625ea1e3",
-        "name": "msg.payload",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1070,
-        "y": 500,
-        "wires": []
+        "g": "54f34fb1c7e08c8f",
+        "name": "Arduino MRK WAN 1310",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 300,
+        "wires": [
+            [
+                "3f7af513f199f060"
+            ]
+        ]
     },
     {
         "id": "f62d93d45b103b0b",
