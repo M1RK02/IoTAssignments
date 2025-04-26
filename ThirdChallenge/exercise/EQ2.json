@@ -8,27 +8,7 @@
         "env": []
     },
     {
-        "id": "86e795f62a60a756",
-        "type": "group",
-        "z": "5268f1da625ea1e3",
-        "name": "Node-RED",
-        "style": {
-            "stroke": "#ff3f3f",
-            "label": true
-        },
-        "nodes": [
-            "743a1e53ac425edd",
-            "efaf717892a467db",
-            "7f608d46bd8f3e88",
-            "5b50a268b892fbb0"
-        ],
-        "x": 414,
-        "y": 479,
-        "w": 972,
-        "h": 82
-    },
-    {
-        "id": "54f34fb1c7e08c8f",
+        "id": "fa996229c137716a",
         "type": "group",
         "z": "5268f1da625ea1e3",
         "name": "End node",
@@ -38,75 +18,118 @@
         },
         "nodes": [
             "853e9584f93105d0",
-            "1f6f55421f13d672"
+            "7b6d77b814c7bf90"
         ],
-        "x": 414,
+        "x": 494,
         "y": 259,
-        "w": 452,
+        "w": 412,
         "h": 82
     },
     {
-        "id": "da3b2ce77f613957",
+        "id": "0adfcb9fc732b274",
+        "type": "group",
+        "z": "5268f1da625ea1e3",
+        "g": "97cbb051c4204c70",
+        "name": "Application Server",
+        "style": {
+            "label": true,
+            "stroke": "#92d04f"
+        },
+        "nodes": [
+            "cec7c04923ebddec",
+            "1d60d5a5e1f69c57",
+            "6e69490ab1f004fb"
+        ],
+        "x": 1594,
+        "y": 379,
+        "w": 712,
+        "h": 82
+    },
+    {
+        "id": "9308a352fe648461",
+        "type": "group",
+        "z": "5268f1da625ea1e3",
+        "g": "97cbb051c4204c70",
+        "name": "LoRaWAN Network Server",
+        "style": {
+            "stroke": "#0070c0",
+            "label": true
+        },
+        "nodes": [
+            "a6c391791e1fb73e",
+            "47abe9d263253128",
+            "488377e5fc3f5b55"
+        ],
+        "x": 1614,
+        "y": 259,
+        "w": 692,
+        "h": 82
+    },
+    {
+        "id": "97cbb051c4204c70",
         "type": "group",
         "z": "5268f1da625ea1e3",
         "name": "The Things Network",
         "style": {
             "label": true,
-            "stroke": "#3f93cf"
+            "stroke": "#001f60"
         },
         "nodes": [
-            "3f7af513f199f060"
+            "9308a352fe648461",
+            "0adfcb9fc732b274",
+            "2aa38c5a8bece3ea"
         ],
-        "x": 954,
+        "x": 1088,
+        "y": 233,
+        "w": 1244,
+        "h": 254
+    },
+    {
+        "id": "2aa38c5a8bece3ea",
+        "type": "group",
+        "z": "5268f1da625ea1e3",
+        "g": "97cbb051c4204c70",
+        "name": "LoRaWAN Gateway",
+        "style": {
+            "label": true,
+            "stroke": "#9363b7"
+        },
+        "nodes": [
+            "bfbde9bad1054735",
+            "751a04c11a3aad74"
+        ],
+        "x": 1114,
         "y": 259,
-        "w": 252,
+        "w": 472,
         "h": 82
     },
     {
         "id": "853e9584f93105d0",
         "type": "function",
         "z": "5268f1da625ea1e3",
-        "g": "54f34fb1c7e08c8f",
-        "name": "DHT22",
-        "func": "var CHANNEL_ID = 2931213;\nvar field1=Math.random()*10;\nvar field2=Math.random()*10;\nmsg.topic = 'channels/'+CHANNEL_ID+'/publish';\nmsg.payload='field1='+field1+'&field2='+field2+'&status=MQTTPUBLISH';\nreturn msg;\n",
+        "g": "fa996229c137716a",
+        "name": "Arduino MRK WAN 1310",
+        "func": "//Generate random temperature and humidity\n\nvar field1=Math.random()*10;\nvar field2=Math.random()*10;\nmsg.payload={\n    temperature: field1,\n    humidity: field2,\n};\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 500,
+        "x": 770,
         "y": 300,
         "wires": [
             [
-                "1f6f55421f13d672"
+                "bfbde9bad1054735"
             ]
         ]
-    },
-    {
-        "id": "3f7af513f199f060",
-        "type": "mqtt out",
-        "z": "5268f1da625ea1e3",
-        "g": "da3b2ce77f613957",
-        "name": "MQTT → ThingSpeak",
-        "topic": "",
-        "qos": "",
-        "retain": "",
-        "respTopic": "",
-        "contentType": "",
-        "userProps": "",
-        "correl": "",
-        "expiry": "",
-        "broker": "f62d93d45b103b0b",
-        "x": 1080,
-        "y": 300,
-        "wires": []
     },
     {
         "id": "7b6d77b814c7bf90",
         "type": "inject",
         "z": "5268f1da625ea1e3",
-        "name": "New measurement",
+        "g": "fa996229c137716a",
+        "name": "DHT22",
         "props": [
             {
                 "p": "payload"
@@ -123,7 +146,7 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 270,
+        "x": 590,
         "y": 300,
         "wires": [
             [
@@ -132,129 +155,189 @@
         ]
     },
     {
-        "id": "743a1e53ac425edd",
+        "id": "413a4e8b18093703",
+        "type": "comment",
+        "z": "5268f1da625ea1e3",
+        "name": "LoRa RF",
+        "info": "",
+        "x": 1000,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "bfbde9bad1054735",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "g": "2aa38c5a8bece3ea",
+        "name": "Incapsulate Packet",
+        "func": "// This emulate the UDP packet that Gateway sends\nlet packet = {\n    gateway_id: \"gateway_01\",\n    payload: {\n        temperature: msg.payload.temperature,\n        humidity: msg.payload.humidity,\n    },\n};\n\nmsg.payload = JSON.stringify(packet);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1230,
+        "y": 300,
+        "wires": [
+            [
+                "751a04c11a3aad74"
+            ]
+        ]
+    },
+    {
+        "id": "cec7c04923ebddec",
+        "type": "http request",
+        "z": "5268f1da625ea1e3",
+        "g": "0adfcb9fc732b274",
+        "name": "Send to ThingSpeak",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 2180,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1d60d5a5e1f69c57",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "g": "0adfcb9fc732b274",
+        "name": "Read packet",
+        "func": "var fields = msg.payload.uplink_message.decoded_payload;\n\nmsg.url = \"https://api.thingspeak.com/update?api_key=W1KENRA56BLV3KOA\";\nmsg.method = \"POST\";\nmsg.headers = { \"Content-Type\": \"application/x-www-form-urlencoded\" };\nmsg.payload = \"field1=\" + fields.temperature + \"&field2=\" + fields.humidity;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1990,
+        "y": 420,
+        "wires": [
+            [
+                "cec7c04923ebddec"
+            ]
+        ]
+    },
+    {
+        "id": "a6c391791e1fb73e",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "g": "9308a352fe648461",
+        "name": "Verify Packet",
+        "func": "// Receive the packet as a JSON string\nlet received = JSON.parse(msg.payload);\n\nif (received.gateway_id === \"gateway_01\") {\n    // Adapt to the TTN-style format\n    msg.payload = {\n        uplink_message: {\n            decoded_payload: {\n                temperature: received.payload.temperature,\n                humidity: received.payload.humidity\n            }\n        }\n    };\n    return msg;\n} else {\n  return null; // Simulate discarted packet\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1970,
+        "y": 300,
+        "wires": [
+            [
+                "47abe9d263253128"
+            ]
+        ]
+    },
+    {
+        "id": "47abe9d263253128",
+        "type": "mqtt out",
+        "z": "5268f1da625ea1e3",
+        "g": "9308a352fe648461",
+        "name": "Expose data with MQTT",
+        "topic": "/ttn/devices/device1/up",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d7d5817a8683a565",
+        "x": 2170,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "6e69490ab1f004fb",
         "type": "mqtt in",
         "z": "5268f1da625ea1e3",
-        "g": "86e795f62a60a756",
-        "name": "Subscribe to ThingSpeak channel",
-        "topic": "channels/2931213/subscribe/fields/+",
+        "g": "0adfcb9fc732b274",
+        "name": "Receive data from Network Server",
+        "topic": "/ttn/devices/device1/up",
         "qos": "2",
         "datatype": "auto-detect",
-        "broker": "f62d93d45b103b0b",
+        "broker": "d7d5817a8683a565",
         "nl": false,
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 580,
-        "y": 520,
+        "x": 1760,
+        "y": 420,
         "wires": [
             [
-                "efaf717892a467db"
+                "1d60d5a5e1f69c57"
             ]
         ]
     },
     {
-        "id": "efaf717892a467db",
-        "type": "function",
+        "id": "751a04c11a3aad74",
+        "type": "udp out",
         "z": "5268f1da625ea1e3",
-        "g": "86e795f62a60a756",
-        "name": "Read packet",
-        "func": "let topic = msg.topic;\nlet value = parseFloat(msg.payload);\n\nif (topic.includes(\"field1\")) {\n    flow.set(\"temperature\", value);\n} else if (topic.includes(\"field2\")) {\n    flow.set(\"humidity\", value);\n}\n\nlet temp = flow.get(\"temperature\");\nlet hum = flow.get(\"humidity\");\n\nif (temp !== undefined && hum !== undefined) {\n    msg.payload = {\n        temp: temp,\n        hum: hum\n    };\n    return msg;\n}\n\nreturn null;\n",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 850,
-        "y": 520,
-        "wires": [
-            [
-                "7f608d46bd8f3e88"
-            ]
-        ]
-    },
-    {
-        "id": "7f608d46bd8f3e88",
-        "type": "function",
-        "z": "5268f1da625ea1e3",
-        "g": "86e795f62a60a756",
-        "name": "temp/hum",
-        "func": "let temp = msg.payload.temp;\nlet hum = msg.payload.hum;\n\nlet ratio = (temp / hum).toFixed(3);\n\nmsg.payload = ratio;\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1050,
-        "y": 520,
-        "wires": [
-            [
-                "5b50a268b892fbb0"
-            ]
-        ]
-    },
-    {
-        "id": "5b50a268b892fbb0",
-        "type": "ui_gauge",
-        "z": "5268f1da625ea1e3",
-        "g": "86e795f62a60a756",
-        "name": "Show temp/hum",
-        "group": "f2b01e62c4d0dea7",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "gauge",
-        "label": "units",
-        "format": "{{value}}",
-        "min": 0,
-        "max": 10,
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "diff": false,
-        "className": "",
-        "x": 1270,
-        "y": 520,
+        "g": "2aa38c5a8bece3ea",
+        "name": "Send to Network Server",
+        "addr": "127.0.0.1",
+        "iface": "",
+        "port": "5000",
+        "ipv": "udp4",
+        "outport": "",
+        "base64": false,
+        "multicast": "false",
+        "x": 1450,
+        "y": 300,
         "wires": []
     },
     {
-        "id": "1f6f55421f13d672",
-        "type": "function",
+        "id": "488377e5fc3f5b55",
+        "type": "udp in",
         "z": "5268f1da625ea1e3",
-        "g": "54f34fb1c7e08c8f",
-        "name": "Arduino MRK WAN 1310",
-        "func": "\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 730,
+        "g": "9308a352fe648461",
+        "name": "Receive data from Gateway",
+        "iface": "",
+        "port": "5000",
+        "ipv": "udp4",
+        "multicast": "false",
+        "group": "",
+        "datatype": "utf8",
+        "x": 1760,
         "y": 300,
         "wires": [
             [
-                "3f7af513f199f060"
+                "a6c391791e1fb73e"
             ]
         ]
     },
     {
-        "id": "f62d93d45b103b0b",
+        "id": "d7d5817a8683a565",
         "type": "mqtt-broker",
-        "name": "",
-        "broker": "mqtt3.thingspeak.com",
-        "port": 1883,
-        "clientid": "ChMYECwnFyIvFyMVFRUeHhY",
+        "name": "Local Broker",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
         "autoConnect": true,
         "usetls": false,
-        "protocolVersion": 4,
+        "protocolVersion": "4",
         "keepalive": 60,
         "cleansession": true,
         "autoUnsubscribe": true,
@@ -275,24 +358,5 @@
         "willMsg": {},
         "userProps": "",
         "sessionExpiry": ""
-    },
-    {
-        "id": "f2b01e62c4d0dea7",
-        "type": "ui_group",
-        "name": "Default",
-        "tab": "96da587a5b69f3f9",
-        "order": 1,
-        "disp": false,
-        "width": 6,
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "96da587a5b69f3f9",
-        "type": "ui_tab",
-        "name": "Home",
-        "icon": "dashboard",
-        "disabled": false,
-        "hidden": false
     }
 ]
