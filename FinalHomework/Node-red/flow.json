@@ -1,0 +1,1015 @@
+[
+    {
+        "id": "5268f1da625ea1e3",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "fa996229c137716a",
+        "type": "group",
+        "z": "5268f1da625ea1e3",
+        "name": "Forklift 1",
+        "style": {
+            "label": true,
+            "stroke": "#ffC000"
+        },
+        "nodes": [
+            "853e9584f93105d0",
+            "4edce64443c2f683",
+            "77480a7019a83aed",
+            "a2d443980e8c2579",
+            "function-imu",
+            "inject-gps-sim",
+            "inject-imu-sim"
+        ],
+        "x": 194,
+        "y": 299,
+        "w": 892,
+        "h": 122
+    },
+    {
+        "id": "0adfcb9fc732b274",
+        "type": "group",
+        "z": "5268f1da625ea1e3",
+        "name": "Local server",
+        "style": {
+            "label": true,
+            "stroke": "#92d04f"
+        },
+        "nodes": [
+            "6e69490ab1f004fb",
+            "1d60d5a5e1f69c57",
+            "9e1c9ab1b3f4ab1a",
+            "4cd614f3005e556b",
+            "bf65872a5857ae9e",
+            "709fd2958848db93",
+            "05ac240bbd2bdc08",
+            "684726d77569156a",
+            "4c155cfa539974fd",
+            "b1ea15e34460de31"
+        ],
+        "x": 1134,
+        "y": 479,
+        "w": 1212,
+        "h": 222
+    },
+    {
+        "id": "4e89e13271b15bdc",
+        "type": "group",
+        "z": "5268f1da625ea1e3",
+        "name": "Forklift 2",
+        "style": {
+            "label": true,
+            "stroke": "#ffC000"
+        },
+        "nodes": [
+            "2d87ca96e9c57903",
+            "cf23658c0d96b3ee",
+            "941285ecaf82820d",
+            "bc1cf01972778b44",
+            "1289d6a005904bf8",
+            "81fbd580a4a02fa7",
+            "aff28f66020e5978"
+        ],
+        "x": 194,
+        "y": 439,
+        "w": 892,
+        "h": 122
+    },
+    {
+        "id": "62fc13cf4cac2c80",
+        "type": "group",
+        "z": "5268f1da625ea1e3",
+        "name": "Forklift 3",
+        "style": {
+            "label": true,
+            "stroke": "#ffC000"
+        },
+        "nodes": [
+            "e96ad2d5035b4484",
+            "73db1990ccb75ced",
+            "0d6763fe8a10237a",
+            "49f57a61988631c1",
+            "66c4b802ba8abb5a",
+            "f2249d31e269ff37",
+            "4b9a69adbdcb8b48"
+        ],
+        "x": 194,
+        "y": 579,
+        "w": 892,
+        "h": 122
+    },
+    {
+        "id": "3d90147ab6e1e5d2",
+        "type": "group",
+        "z": "5268f1da625ea1e3",
+        "name": "Forklift 4",
+        "style": {
+            "label": true,
+            "stroke": "#ffC000"
+        },
+        "nodes": [
+            "47946be066da2db3",
+            "a27a4286cb2b0239",
+            "5917b996785b7812",
+            "24b52d0a1566e3e5",
+            "9abcf606ab62d1b8",
+            "a155dedf97159fd5",
+            "dcaa675487f2c49b"
+        ],
+        "x": 194,
+        "y": 719,
+        "w": 892,
+        "h": 122
+    },
+    {
+        "id": "853e9584f93105d0",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "g": "fa996229c137716a",
+        "name": "SIM7080G",
+        "func": "let gps = msg.payload[0];\nlet imu = msg.payload[1];\nlet id = 1;\n\n// Unione dei due oggetti in uno solo\nmsg.payload = { id, ...gps, ...imu };\n\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 360,
+        "wires": [
+            [
+                "77480a7019a83aed"
+            ]
+        ]
+    },
+    {
+        "id": "6e69490ab1f004fb",
+        "type": "mqtt in",
+        "z": "5268f1da625ea1e3",
+        "g": "0adfcb9fc732b274",
+        "name": "Receive data from forklifts",
+        "topic": "forklifts/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d7d5817a8683a565",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 1270,
+        "y": 560,
+        "wires": [
+            [
+                "1d60d5a5e1f69c57"
+            ]
+        ]
+    },
+    {
+        "id": "4edce64443c2f683",
+        "type": "join",
+        "z": "5268f1da625ea1e3",
+        "g": "fa996229c137716a",
+        "name": "ESP32",
+        "mode": "auto",
+        "build": "merged",
+        "property": "",
+        "propertyType": "full",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 670,
+        "y": 360,
+        "wires": [
+            [
+                "853e9584f93105d0"
+            ]
+        ]
+    },
+    {
+        "id": "1d60d5a5e1f69c57",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "g": "0adfcb9fc732b274",
+        "name": "Read packet",
+        "func": "let data = msg.payload;\nlet now = new Date();\nlet timestamp = Math.floor(now.getTime() / 1000);\nlet readableTime = now.toISOString();\n\nmsg.payload = {\n    id: data.id,\n    timestamp: timestamp,\n    readable_time: readableTime,\n    lat: data.lat,\n    lon: data.lon,\n    speed: data.speed,\n    acc_x: data.acc_x,\n    acc_y: data.acc_y,\n    acc_z: data.acc_z,\n    impact: data.impact\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1490,
+        "y": 560,
+        "wires": [
+            [
+                "4cd614f3005e556b",
+                "bf65872a5857ae9e"
+            ]
+        ]
+    },
+    {
+        "id": "77480a7019a83aed",
+        "type": "mqtt out",
+        "z": "5268f1da625ea1e3",
+        "g": "fa996229c137716a",
+        "name": "Antenna NB-IoT",
+        "topic": "forklifts/1",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d7d5817a8683a565",
+        "x": 980,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "2d87ca96e9c57903",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "g": "4e89e13271b15bdc",
+        "name": "SIM7080G",
+        "func": "let gps = msg.payload[0];\nlet imu = msg.payload[1];\nlet id = 2;\n\n// Unione dei due oggetti in uno solo\nmsg.payload = { id, ...gps, ...imu };\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 500,
+        "wires": [
+            [
+                "941285ecaf82820d"
+            ]
+        ]
+    },
+    {
+        "id": "cf23658c0d96b3ee",
+        "type": "join",
+        "z": "5268f1da625ea1e3",
+        "g": "4e89e13271b15bdc",
+        "name": "ESP32",
+        "mode": "auto",
+        "build": "merged",
+        "property": "",
+        "propertyType": "full",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 670,
+        "y": 500,
+        "wires": [
+            [
+                "2d87ca96e9c57903"
+            ]
+        ]
+    },
+    {
+        "id": "941285ecaf82820d",
+        "type": "mqtt out",
+        "z": "5268f1da625ea1e3",
+        "g": "4e89e13271b15bdc",
+        "name": "Antenna NB-IoT",
+        "topic": "forklifts/2",
+        "qos": "2",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d7d5817a8683a565",
+        "x": 980,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "e96ad2d5035b4484",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "g": "62fc13cf4cac2c80",
+        "name": "SIM7080G",
+        "func": "let gps = msg.payload[0];\nlet imu = msg.payload[1];\nlet id = 3;\n\n// Unione dei due oggetti in uno solo\nmsg.payload = { id, ...gps, ...imu };\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 640,
+        "wires": [
+            [
+                "0d6763fe8a10237a"
+            ]
+        ]
+    },
+    {
+        "id": "73db1990ccb75ced",
+        "type": "join",
+        "z": "5268f1da625ea1e3",
+        "g": "62fc13cf4cac2c80",
+        "name": "ESP32",
+        "mode": "auto",
+        "build": "merged",
+        "property": "",
+        "propertyType": "full",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 670,
+        "y": 640,
+        "wires": [
+            [
+                "e96ad2d5035b4484"
+            ]
+        ]
+    },
+    {
+        "id": "0d6763fe8a10237a",
+        "type": "mqtt out",
+        "z": "5268f1da625ea1e3",
+        "g": "62fc13cf4cac2c80",
+        "name": "Antenna NB-IoT",
+        "topic": "forklifts/4",
+        "qos": "2",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d7d5817a8683a565",
+        "x": 980,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "47946be066da2db3",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "g": "3d90147ab6e1e5d2",
+        "name": "SIM7080G",
+        "func": "let gps = msg.payload[0];\nlet imu = msg.payload[1];\nlet id = 4;\n\n// Unione dei due oggetti in uno solo\nmsg.payload = { id, ...gps, ...imu };\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 780,
+        "wires": [
+            [
+                "5917b996785b7812"
+            ]
+        ]
+    },
+    {
+        "id": "a27a4286cb2b0239",
+        "type": "join",
+        "z": "5268f1da625ea1e3",
+        "g": "3d90147ab6e1e5d2",
+        "name": "ESP32",
+        "mode": "auto",
+        "build": "merged",
+        "property": "",
+        "propertyType": "full",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 670,
+        "y": 780,
+        "wires": [
+            [
+                "47946be066da2db3"
+            ]
+        ]
+    },
+    {
+        "id": "5917b996785b7812",
+        "type": "mqtt out",
+        "z": "5268f1da625ea1e3",
+        "g": "3d90147ab6e1e5d2",
+        "name": "Antenna NB-IoT",
+        "topic": "forklifts/5",
+        "qos": "2",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d7d5817a8683a565",
+        "x": 980,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "9e1c9ab1b3f4ab1a",
+        "type": "file",
+        "z": "5268f1da625ea1e3",
+        "g": "0adfcb9fc732b274",
+        "name": "Save data",
+        "filename": "FinalHomework/Node-red/log.csv",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "false",
+        "encoding": "utf8",
+        "x": 1840,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4cd614f3005e556b",
+        "type": "csv",
+        "z": "5268f1da625ea1e3",
+        "g": "0adfcb9fc732b274",
+        "name": "Convert to CSV",
+        "spec": "rfc",
+        "sep": "\\t",
+        "hdrin": true,
+        "hdrout": "once",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "id,timestamp,readable_time,lat,lon,speed,acc_x,acc_y,acc_z,impact",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 1680,
+        "y": 520,
+        "wires": [
+            [
+                "9e1c9ab1b3f4ab1a"
+            ]
+        ]
+    },
+    {
+        "id": "bf65872a5857ae9e",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "g": "0adfcb9fc732b274",
+        "name": "Process & Store Forklift Data",
+        "func": "// Estrai i dati dal messaggio in arrivo\nlet id = msg.payload.id;\nlet lat = msg.payload.lat;\nlet lon = msg.payload.lon;\nlet speed = msg.payload.speed;\nlet impact = msg.payload.impact;\n\n// Recupera lo stato corrente dei muletti dal contesto del flusso\nlet forklifts = flow.get(\"forklifts\") || {};\n\n// Se il muletto non esiste ancora nello stato, inizializzalo\nif (!forklifts[id]) {\n    forklifts[id] = {\n        id: id,\n        lat: lat,\n        lon: lon,\n        speed: speed,\n        speedMax: speed,\n        speedSum: speed,\n        speedCount: 1,\n        distance: 0,\n        impacts: impact ? 1 : 0,\n        lastLat: lat,\n        lastLon: lon\n    };\n} else {\n    // Calcola la distanza percorsa\n    let prevLat = forklifts[id].lastLat;\n    let prevLon = forklifts[id].lastLon;\n    let distance = getDistanceFromLatLonInMeters(prevLat, prevLon, lat, lon);\n    forklifts[id].distance += distance;\n    forklifts[id].lastLat = lat;\n    forklifts[id].lastLon = lon;\n\n    // Aggiorna le statistiche di velocità\n    forklifts[id].speed = speed;\n    forklifts[id].speedMax = Math.max(forklifts[id].speedMax, speed);\n    forklifts[id].speedSum += speed;\n    forklifts[id].speedCount += 1;\n\n    // Aggiorna il conteggio degli impatti\n    if (impact) {\n        forklifts[id].impacts += 1;\n    }\n}\n\n// Salva lo stato aggiornato nel contesto del flusso\nflow.set(\"forklifts\", forklifts);\n\n// Prepara il messaggio per la dashboard\nlet dashboardMsg = {\n    payload: Object.values(forklifts)\n};\n\n// Prepara il messaggio per la mappa\nlet mapMsg = {\n    payload: {\n        name: \"Muletto \" + id,\n        lat: lat,\n        lon: lon,\n        icon: \"truck\",\n        layer: \"forklifts\",\n        speed: speed + \" km/h\",\n        tooltip: \"Muletto \" + id + \" - Velocità: \" + speed + \" km/h\"\n    }\n};\n\n// Restituisci entrambi i messaggi\nreturn [dashboardMsg, mapMsg];\n\n// Funzione per calcolare la distanza tra due coordinate geografiche\nfunction getDistanceFromLatLonInMeters(lat1, lon1, lat2, lon2) {\n    function deg2rad(deg) {\n        return deg * (Math.PI / 180);\n    }\n    let R = 6371e3; // Raggio della Terra in metri\n    let dLat = deg2rad(lat2 - lat1);\n    let dLon = deg2rad(lon2 - lon1);\n    let a =\n        Math.sin(dLat / 2) * Math.sin(dLat / 2) +\n        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *\n        Math.sin(dLon / 2) * Math.sin(dLon / 2);\n    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));\n    let d = R * c;\n    return d;\n}\n",
+        "outputs": 2,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1720,
+        "y": 600,
+        "wires": [
+            [
+                "709fd2958848db93"
+            ],
+            [
+                "05ac240bbd2bdc08"
+            ]
+        ]
+    },
+    {
+        "id": "709fd2958848db93",
+        "type": "ui_template",
+        "z": "5268f1da625ea1e3",
+        "g": "0adfcb9fc732b274",
+        "group": "a3d194fbb6025806",
+        "name": "Forklift Card",
+        "order": 1,
+        "width": "12",
+        "height": "5",
+        "format": "<div ng-repeat=\"forklift in msg.payload\" style=\"border:1px solid #ccc; border-radius:10px; padding:10px; margin:5px\">\n  <h3>Muletto {{forklift.id}}</h3>\n  <p>Posizione: {{forklift.lat}}, {{forklift.lon}}</p>\n  <p>Velocità attuale: {{forklift.speed}} km/h</p>\n  <p>Velocità media: {{(forklift.speedSum / forklift.speedCount).toFixed(2)}} km/h</p>\n  <p>Velocità massima: {{forklift.speedMax}} km/h</p>\n  <p>Distanza oggi: {{(forklift.distance / 1000).toFixed(2)}} km</p>\n  <p>Impatti: {{forklift.impacts}}</p>\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 1950,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "05ac240bbd2bdc08",
+        "type": "worldmap",
+        "z": "5268f1da625ea1e3",
+        "g": "0adfcb9fc732b274",
+        "name": "",
+        "lat": "",
+        "lon": "",
+        "zoom": "",
+        "layer": "OSMG",
+        "cluster": "",
+        "maxage": "",
+        "usermenu": "hide",
+        "layers": "hide",
+        "panit": "false",
+        "hiderightclick": "false",
+        "coords": "none",
+        "path": "",
+        "overlist": "DR,CO,RA,DN,HM",
+        "maplist": "OSMG,OSMC,EsriC,EsriS,EsriT,EsriO,EsriDG,NatGeo,UKOS,OpTop",
+        "mapname": "",
+        "mapurl": "",
+        "mapopt": "",
+        "mapwms": false,
+        "x": 1950,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "684726d77569156a",
+        "type": "ui_template",
+        "z": "5268f1da625ea1e3",
+        "g": "0adfcb9fc732b274",
+        "group": "a3d194fbb6025806",
+        "name": "Show worldmap on the dashboard",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "format": "<iframe src=\"/worldmap\" width=\"100%\" height=\"500px\" style=\"border:none;\"></iframe>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "Ahow worldmap on the tmplate",
+        "x": 2180,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4c155cfa539974fd",
+        "type": "inject",
+        "z": "5268f1da625ea1e3",
+        "g": "0adfcb9fc732b274",
+        "name": "Reset",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 1510,
+        "y": 660,
+        "wires": [
+            [
+                "b1ea15e34460de31"
+            ]
+        ]
+    },
+    {
+        "id": "b1ea15e34460de31",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "g": "0adfcb9fc732b274",
+        "name": "Reset forklifts state",
+        "func": "flow.set(\"forklifts\", {});\nnode.warn(\"Forklifts states resetted.\");\nreturn null;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1690,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "inject-gps-sim",
+        "type": "inject",
+        "z": "5268f1da625ea1e3",
+        "g": "fa996229c137716a",
+        "name": "MPU6050",
+        "props": [],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "x": 330,
+        "y": 380,
+        "wires": [
+            [
+                "function-imu"
+            ]
+        ]
+    },
+    {
+        "id": "inject-imu-sim",
+        "type": "inject",
+        "z": "5268f1da625ea1e3",
+        "g": "fa996229c137716a",
+        "name": "GPS NEO-6M",
+        "props": [],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "x": 320,
+        "y": 340,
+        "wires": [
+            [
+                "a2d443980e8c2579"
+            ]
+        ]
+    },
+    {
+        "id": "function-imu",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "g": "fa996229c137716a",
+        "name": "Random IMU",
+        "func": "// Accelerometro e giroscopio\nlet acc_x = (Math.random() * 0.2 - 0.1).toFixed(3);\nlet acc_y = (Math.random() * 0.2 - 0.1).toFixed(3);\nlet acc_z = (9.7 + Math.random() * 0.4).toFixed(2);\n\nlet gyro_x = (Math.random() * 0.4 - 0.2).toFixed(2);\nlet gyro_y = (Math.random() * 0.4 - 0.2).toFixed(2);\nlet gyro_z = (Math.random() * 0.4 - 0.2).toFixed(2);\n\nlet impact = Math.random() < 0.05; // 5% di possibilità di impatto\n\nmsg.payload = {\n    acc_x: parseFloat(acc_x),\n    acc_y: parseFloat(acc_y),\n    acc_z: parseFloat(acc_z),\n    gyro_x: parseFloat(gyro_x),\n    gyro_y: parseFloat(gyro_y),\n    gyro_z: parseFloat(gyro_z),\n    impact: impact\n};\n\nmsg.parts = {\n    id: \"forkliftSim\",\n    index: 1,\n    count: 2\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 380,
+        "wires": [
+            [
+                "4edce64443c2f683"
+            ]
+        ]
+    },
+    {
+        "id": "a2d443980e8c2579",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "g": "fa996229c137716a",
+        "name": "Random GPS",
+        "func": "// Area di riferimento: centro Torino (lat 45.0703, lon 7.6869)\nlet baseLat = 45.0703;\nlet baseLon = 7.6869;\n\n// Variazione max di circa 500m (~0.0045 gradi)\nlet lat = baseLat + (Math.random() - 0.5) * 0.009;\nlet lon = baseLon + (Math.random() - 0.5) * 0.009;\n\n// Velocità tra 1.0 e 6.0 km/h\nlet speed = (Math.random() * 5 + 1).toFixed(2);\n\nmsg.payload = {\n    lat: parseFloat(lat.toFixed(6)),\n    lon: parseFloat(lon.toFixed(6)),\n    speed: parseFloat(speed)\n};\n\nmsg.parts = {\n    id: \"forkliftSim\",\n    index: 0,\n    count: 2\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 340,
+        "wires": [
+            [
+                "4edce64443c2f683"
+            ]
+        ]
+    },
+    {
+        "id": "bc1cf01972778b44",
+        "type": "inject",
+        "z": "5268f1da625ea1e3",
+        "g": "4e89e13271b15bdc",
+        "name": "MPU6050",
+        "props": [],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "x": 330,
+        "y": 520,
+        "wires": [
+            [
+                "81fbd580a4a02fa7"
+            ]
+        ]
+    },
+    {
+        "id": "1289d6a005904bf8",
+        "type": "inject",
+        "z": "5268f1da625ea1e3",
+        "g": "4e89e13271b15bdc",
+        "name": "GPS NEO-6M",
+        "props": [],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "x": 320,
+        "y": 480,
+        "wires": [
+            [
+                "aff28f66020e5978"
+            ]
+        ]
+    },
+    {
+        "id": "81fbd580a4a02fa7",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "g": "4e89e13271b15bdc",
+        "name": "Random IMU",
+        "func": "// Accelerometro e giroscopio\nlet acc_x = (Math.random() * 0.2 - 0.1).toFixed(3);\nlet acc_y = (Math.random() * 0.2 - 0.1).toFixed(3);\nlet acc_z = (9.7 + Math.random() * 0.4).toFixed(2);\n\nlet gyro_x = (Math.random() * 0.4 - 0.2).toFixed(2);\nlet gyro_y = (Math.random() * 0.4 - 0.2).toFixed(2);\nlet gyro_z = (Math.random() * 0.4 - 0.2).toFixed(2);\n\nlet impact = Math.random() < 0.05; // 5% di possibilità di impatto\n\nmsg.payload = {\n    acc_x: parseFloat(acc_x),\n    acc_y: parseFloat(acc_y),\n    acc_z: parseFloat(acc_z),\n    gyro_x: parseFloat(gyro_x),\n    gyro_y: parseFloat(gyro_y),\n    gyro_z: parseFloat(gyro_z),\n    impact: impact\n};\n\nmsg.parts = {\n    id: \"forkliftSim\",\n    index: 1,\n    count: 2\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 520,
+        "wires": [
+            [
+                "cf23658c0d96b3ee"
+            ]
+        ]
+    },
+    {
+        "id": "aff28f66020e5978",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "g": "4e89e13271b15bdc",
+        "name": "Random GPS",
+        "func": "// Area di riferimento: centro Torino (lat 45.0703, lon 7.6869)\nlet baseLat = 45.0703;\nlet baseLon = 7.6869;\n\n// Variazione max di circa 500m (~0.0045 gradi)\nlet lat = baseLat + (Math.random() - 0.5) * 0.009;\nlet lon = baseLon + (Math.random() - 0.5) * 0.009;\n\n// Velocità tra 1.0 e 6.0 km/h\nlet speed = (Math.random() * 5 + 1).toFixed(2);\n\nmsg.payload = {\n    lat: parseFloat(lat.toFixed(6)),\n    lon: parseFloat(lon.toFixed(6)),\n    speed: parseFloat(speed)\n};\n\nmsg.parts = {\n    id: \"forkliftSim\",\n    index: 0,\n    count: 2\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 480,
+        "wires": [
+            [
+                "cf23658c0d96b3ee"
+            ]
+        ]
+    },
+    {
+        "id": "49f57a61988631c1",
+        "type": "inject",
+        "z": "5268f1da625ea1e3",
+        "g": "62fc13cf4cac2c80",
+        "name": "MPU6050",
+        "props": [],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "x": 330,
+        "y": 660,
+        "wires": [
+            [
+                "f2249d31e269ff37"
+            ]
+        ]
+    },
+    {
+        "id": "66c4b802ba8abb5a",
+        "type": "inject",
+        "z": "5268f1da625ea1e3",
+        "g": "62fc13cf4cac2c80",
+        "name": "GPS NEO-6M",
+        "props": [],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "x": 320,
+        "y": 620,
+        "wires": [
+            [
+                "4b9a69adbdcb8b48"
+            ]
+        ]
+    },
+    {
+        "id": "f2249d31e269ff37",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "g": "62fc13cf4cac2c80",
+        "name": "Random IMU",
+        "func": "// Accelerometro e giroscopio\nlet acc_x = (Math.random() * 0.2 - 0.1).toFixed(3);\nlet acc_y = (Math.random() * 0.2 - 0.1).toFixed(3);\nlet acc_z = (9.7 + Math.random() * 0.4).toFixed(2);\n\nlet gyro_x = (Math.random() * 0.4 - 0.2).toFixed(2);\nlet gyro_y = (Math.random() * 0.4 - 0.2).toFixed(2);\nlet gyro_z = (Math.random() * 0.4 - 0.2).toFixed(2);\n\nlet impact = Math.random() < 0.05; // 5% di possibilità di impatto\n\nmsg.payload = {\n    acc_x: parseFloat(acc_x),\n    acc_y: parseFloat(acc_y),\n    acc_z: parseFloat(acc_z),\n    gyro_x: parseFloat(gyro_x),\n    gyro_y: parseFloat(gyro_y),\n    gyro_z: parseFloat(gyro_z),\n    impact: impact\n};\n\nmsg.parts = {\n    id: \"forkliftSim\",\n    index: 1,\n    count: 2\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 660,
+        "wires": [
+            [
+                "73db1990ccb75ced"
+            ]
+        ]
+    },
+    {
+        "id": "4b9a69adbdcb8b48",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "g": "62fc13cf4cac2c80",
+        "name": "Random GPS",
+        "func": "// Area di riferimento: centro Torino (lat 45.0703, lon 7.6869)\nlet baseLat = 45.0703;\nlet baseLon = 7.6869;\n\n// Variazione max di circa 500m (~0.0045 gradi)\nlet lat = baseLat + (Math.random() - 0.5) * 0.009;\nlet lon = baseLon + (Math.random() - 0.5) * 0.009;\n\n// Velocità tra 1.0 e 6.0 km/h\nlet speed = (Math.random() * 5 + 1).toFixed(2);\n\nmsg.payload = {\n    lat: parseFloat(lat.toFixed(6)),\n    lon: parseFloat(lon.toFixed(6)),\n    speed: parseFloat(speed)\n};\n\nmsg.parts = {\n    id: \"forkliftSim\",\n    index: 0,\n    count: 2\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 620,
+        "wires": [
+            [
+                "73db1990ccb75ced"
+            ]
+        ]
+    },
+    {
+        "id": "24b52d0a1566e3e5",
+        "type": "inject",
+        "z": "5268f1da625ea1e3",
+        "g": "3d90147ab6e1e5d2",
+        "name": "MPU6050",
+        "props": [],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "x": 330,
+        "y": 800,
+        "wires": [
+            [
+                "a155dedf97159fd5"
+            ]
+        ]
+    },
+    {
+        "id": "9abcf606ab62d1b8",
+        "type": "inject",
+        "z": "5268f1da625ea1e3",
+        "g": "3d90147ab6e1e5d2",
+        "name": "GPS NEO-6M",
+        "props": [],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "x": 320,
+        "y": 760,
+        "wires": [
+            [
+                "dcaa675487f2c49b"
+            ]
+        ]
+    },
+    {
+        "id": "a155dedf97159fd5",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "g": "3d90147ab6e1e5d2",
+        "name": "Random IMU",
+        "func": "// Accelerometro e giroscopio\nlet acc_x = (Math.random() * 0.2 - 0.1).toFixed(3);\nlet acc_y = (Math.random() * 0.2 - 0.1).toFixed(3);\nlet acc_z = (9.7 + Math.random() * 0.4).toFixed(2);\n\nlet gyro_x = (Math.random() * 0.4 - 0.2).toFixed(2);\nlet gyro_y = (Math.random() * 0.4 - 0.2).toFixed(2);\nlet gyro_z = (Math.random() * 0.4 - 0.2).toFixed(2);\n\nlet impact = Math.random() < 0.05; // 5% di possibilità di impatto\n\nmsg.payload = {\n    acc_x: parseFloat(acc_x),\n    acc_y: parseFloat(acc_y),\n    acc_z: parseFloat(acc_z),\n    gyro_x: parseFloat(gyro_x),\n    gyro_y: parseFloat(gyro_y),\n    gyro_z: parseFloat(gyro_z),\n    impact: impact\n};\n\nmsg.parts = {\n    id: \"forkliftSim\",\n    index: 1,\n    count: 2\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 800,
+        "wires": [
+            [
+                "a27a4286cb2b0239"
+            ]
+        ]
+    },
+    {
+        "id": "dcaa675487f2c49b",
+        "type": "function",
+        "z": "5268f1da625ea1e3",
+        "g": "3d90147ab6e1e5d2",
+        "name": "Random GPS",
+        "func": "// Area di riferimento: centro Torino (lat 45.0703, lon 7.6869)\nlet baseLat = 45.0703;\nlet baseLon = 7.6869;\n\n// Variazione max di circa 500m (~0.0045 gradi)\nlet lat = baseLat + (Math.random() - 0.5) * 0.009;\nlet lon = baseLon + (Math.random() - 0.5) * 0.009;\n\n// Velocità tra 1.0 e 6.0 km/h\nlet speed = (Math.random() * 5 + 1).toFixed(2);\n\nmsg.payload = {\n    lat: parseFloat(lat.toFixed(6)),\n    lon: parseFloat(lon.toFixed(6)),\n    speed: parseFloat(speed)\n};\n\nmsg.parts = {\n    id: \"forkliftSim\",\n    index: 0,\n    count: 2\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 760,
+        "wires": [
+            [
+                "a27a4286cb2b0239"
+            ]
+        ]
+    },
+    {
+        "id": "d7d5817a8683a565",
+        "type": "mqtt-broker",
+        "name": "Local Broker",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "a3d194fbb6025806",
+        "type": "ui_group",
+        "name": "Forklift Info",
+        "tab": "cd54c8a6d1878e99",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "cd54c8a6d1878e99",
+        "type": "ui_tab",
+        "name": "Dashboard",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]
